@@ -51,7 +51,8 @@ pipeline {
 
     post {
         always {
-            node {
+            // Use the same label as the main pipeline agent
+            node('master') {
                 // Clean up any leftover Docker resources
                 sh 'docker system prune -f'
             }
