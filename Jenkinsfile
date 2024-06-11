@@ -11,6 +11,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    // Ensure the Maven wrapper script has execute permissions
+                    sh 'chmod +x ./mvnw'
                     // Build the Spring Boot application using Maven
                     sh './mvnw clean package'
                 }
