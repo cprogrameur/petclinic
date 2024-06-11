@@ -54,10 +54,10 @@ pipeline {
     post {
         always {
             // Use the same label as the main pipeline agent
-            node('mynode') {
+            // node('mynode') {
                 // Clean up any leftover Docker resources
                 sh 'docker system prune -f'
-            }
+            // }
         }
         success {
             echo 'Deployment successful!'
