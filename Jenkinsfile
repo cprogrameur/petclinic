@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'mynode'
+    }
 
     environment {
         // Define your Docker Hub credentials here
@@ -11,10 +13,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    node {
                         // Build the Spring Boot application using Maven
                         sh './mvnw clean package'
-                    }
                 }
             }
         }
@@ -22,10 +22,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    node {
                         // Build Docker image
                         sh 'docker build -t $DOCKER_IMAGE .'
-                    }
                 }
             }
         }
@@ -33,12 +31,10 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    node {
                         // Log in to Docker Hub
                         sh 'echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin'
                         // Push Docker image to Docker Hub
                         sh 'docker push $DOCKER_IMAGE'
-                    }
                 }
             }
         }
@@ -46,12 +42,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    node {
                         // Remove any existing container
                         sh 'docker rm -f spring-boot-app || true'
                         // Run a new container
                         sh 'docker run -d --name spring-boot-app -p 8080:8080 $DOCKER_IMAGE'
-                    }
                 }
             }
         }
@@ -59,10 +53,8 @@ pipeline {
 
     post {
         always {
-            node{
                 // Clean up any leftover Docker resources
                 sh 'docker system prune -f'
-            }
         }
         success {
             echo 'Deployment successful!'
