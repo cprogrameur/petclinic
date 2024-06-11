@@ -4,7 +4,7 @@ pipeline {
     environment {
         // Define your Docker Hub credentials here
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials-id')
-        DOCKER_IMAGE = 'your-dockerhub-username/your-spring-boot-app'
+        DOCKER_IMAGE = 'gydcorp/petclinic'
     }
 
     stages {
