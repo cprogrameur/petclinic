@@ -44,7 +44,6 @@ pipeline {
                 script {
                     // Remove any existing container
                     sh 'docker rm -f spring-boot-app || true'
-                    sh 'docker-compose -f /home/djamal/jenkins/workspace/petclinic-job/docker-compose.yml up'
                     // Run a new container
                     sh 'docker run -d --name spring-boot-app -p 8080:8080 $DOCKER_IMAGE'
                 }
