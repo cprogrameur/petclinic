@@ -5,8 +5,10 @@ pipeline {
         jdk 'jdk17'
         maven 'maven3'
     }
-    
-     stages{
+    environment {
+        SCANNER_HOME=tool 'sonar-scanner'
+    }
+    stages{
         stage("Compile"){
             steps{
                 sh "mvn clean compile"
@@ -18,5 +20,29 @@ pipeline {
                 sh "mvn test"
             }
         }
-     }
+
+        stage("Sonarqube Analysis "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Petclinic \
+                    -Dsonar.java.binaries=. \
+                    -Dsonar.projectKey=Petclinic '''
+                }
+            }
+        }
+        
+      
+        stage("Build"){
+            steps{
+                sh " mvn clean install"
+            }
+        }
+        
+        stage("OWASP Dependency Check"){
+            steps{
+                dependencyCheck additionalArguments: '--scan ./ ' , odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+    }
 }
