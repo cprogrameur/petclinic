@@ -11,12 +11,14 @@ pipeline {
     stages{
         stage("Compile"){
             steps{
+                sh "newgrp maven"
                 sh "mvn clean compile"
             }
         }
         
          stage("Test Cases"){
             steps{
+                sh "newgrp maven"
                 sh "mvn test"
             }
         }
